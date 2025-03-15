@@ -19,7 +19,7 @@ export const DashboardLayout = () => {
           <Aperture className="text-primary" />
           <h2 className="text-primary font-semibold text-lg">Urban Lens</h2>
         </div>
-        <nav className="py-2">
+        <nav className="">
           <Tabs>
             {navItems.map((item) => (
               <Tab

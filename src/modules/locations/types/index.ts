@@ -20,3 +20,9 @@ export interface DataPoint {
   value2: number;
   value3: number;
 }
+
+export interface AvailableLocation {
+  name: string;
+  lat: number;
+  lng: number;
+}
