@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -24,4 +25,17 @@
   },
   "include": ["src", "tests.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
+=======
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+>>>>>>> a8e4ec24da5d9fa7722cd4925cef4e778b0d7b0e
 }
