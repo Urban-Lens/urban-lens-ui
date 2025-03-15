@@ -1,8 +1,8 @@
-import AuthBanner from "@/assets/auth-banner.png";
-import { LoginForm } from "../components/login-form";
+import AuthBanner from "@/assets/auth-banner.png"; // Make sure this asset exists
+import { RegisterForm } from "../components/register-form";
 import Logo from "@/components/logo";
 
-export const LoginPage = () => {
+export const RegisterPage = () => {
   return (
     <main className="flex flex-row gap-12 bg-white">
       <section className="flex flex-col flex-1 p-6">
@@ -13,12 +13,13 @@ export const LoginPage = () => {
         <div className="flex flex-col items-center justify-center flex-1">
           <div className="max-w-[500px] space-y-6">
             <div>
-              <h2 className="text-2xl font-semibold">Welcome back</h2>
+              <h2 className="text-2xl font-semibold">Create an account</h2>
               <p className="text-sm text-muted-foreground">
-                Sign in to your account to continue using Urban Lens analytics
+                Urban Lens provides dynamic, real-time analytics on traffic
+                patterns, vehicle movement, foot traffic, and urban safety.
               </p>
             </div>
-            <LoginForm />
+            <RegisterForm />
           </div>
         </div>
       </section>
@@ -33,3 +34,5 @@ export const LoginPage = () => {
     </main>
   );
 };
+
+export default RegisterPage;
