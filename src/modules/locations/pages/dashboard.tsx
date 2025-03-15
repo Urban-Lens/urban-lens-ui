@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {  RealTimeChart } from "../components/real-time-chart";
 import { generateRandomData } from "@/lib/utils";
 import { DataPoint } from "../types";
+import PointsOfInterest from "../components/poi";
 
 const Dashboard = () => {
   const [chartData, setChartData] = useState<DataPoint[]>(
@@ -68,8 +69,13 @@ const Dashboard = () => {
           }
         />
       </div>
-      <div className="">
-        <RealTimeChart data={chartData} />
+      <div className="flex flex-row gap-6">
+        <div className="flex-1/2">
+          <RealTimeChart data={chartData} />
+        </div>
+        <div className="flex-1">
+          <PointsOfInterest />
+        </div>
       </div>
     </div>
   );

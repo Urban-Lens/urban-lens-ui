@@ -46,7 +46,7 @@ export function RealTimeChart({ data }: RealTimeChartProps) {
           <p className="text-4xl">125,000</p>
         </div>
       </CardHeader>
-      <CardContent className="h-[300px]">
+      <CardContent className="h-[320px] pb-4">
         <div className="flex flex-wrap gap-2 mb-4">
           {locations.map((location) => (
             <button
