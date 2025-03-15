@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLogin } from "../hooks/login";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks/login";
 import { useAuth } from "../provider";
 import { ILoginCredentials } from "../types";
-import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -19,7 +20,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const loginMutation = useLogin((loginResponse) => {
-    setToken(loginResponse.token);
+    setToken(loginResponse.access_token);
     navigate("/dashboard");
   });
 
@@ -46,12 +47,22 @@ export const LoginForm = () => {
       {/* Password Field */}
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Enter your password"
-          {...register("password", { required: "Password is required" })}
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            {...register("password", { required: "Password is required" })}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-auto py-0.5 px-2 text-gray-500 hover:text-gray-700"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </Button>
+        </div>
         {errors.password?.message && (
           <p className="text-red-500 text-sm">
             {String(errors.password.message)}

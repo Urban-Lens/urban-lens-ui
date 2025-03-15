@@ -84,14 +84,12 @@ export const RegisterForm = () => {
   });
 
   // Call the useRegister hook. On success, navigate to "/login".
-  const register = useRegister((_response) => {
+  const register = useRegister(() => {
     navigate("/login");
   });
 
   const onSubmit = (values: RegisterFormValues) => {
-    // Destructure to remove confirmPassword from the payload.
     const { confirmPassword, ...registerData } = values;
-    // Call the mutator to send data to the API.
     register.mutate(registerData as IRegisterCredentials);
   };
 
