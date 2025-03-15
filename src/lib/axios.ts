@@ -4,7 +4,7 @@ import storage from "./storage";
 import { toast } from "sonner";
 
 export const axios = Axios.create({
-    baseURL: BASE_URL + "/api/v1",
+    baseURL: BASE_URL,
 });
 
 axios.interceptors.request.use(
