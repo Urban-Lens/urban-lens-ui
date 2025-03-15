@@ -1,22 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLogin } from "../hooks/login";
 import { useForm } from "react-hook-form";
-
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../provider";
+import { ILoginCredentials } from "../types";
 export const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    formState: { errors },
+  } = useForm<ILoginCredentials>();
 
-  const onSubmit = (data: any) => {
-    console.log("Login Data:", data);
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const loginMutation = useLogin((loginResponse) => {
+    setToken(loginResponse.token);
+    navigate("/dashboard");
+  });
+
+  const onSubmit = (data: ILoginCredentials) => {
+    loginMutation.mutate(data);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-
       {/* Email Field */}
       <div className="my-4">
         <Label htmlFor="email">Email Address</Label>
@@ -62,9 +72,9 @@ export const LoginForm = () => {
       <Button
         type="submit"
         className="w-full hover:cursor-pointer"
-        disabled={isSubmitting}
+        disabled={loginMutation.isPending}
       >
-        {isSubmitting ? "Signing in..." : "Continue"}
+        {loginMutation.isPending ? "Signing in..." : "Continue"}
       </Button>
     </form>
   );

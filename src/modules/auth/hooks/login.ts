@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import { axios } from "@/lib/axios";
+import { useMutation } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import { ILoginCredentials, ILoginResponse } from "../types";
@@ -19,7 +19,7 @@ export const useLogin = (
       const response = await login(loginCredentials);
       return response;
     },
-    onError: (_error: Error) => {
+    onError: () => {
       toast.error("Invalid username or password. Please try again.");
     },
 

@@ -1,15 +1,11 @@
-import React, { useContext, createContext, useState } from "react";
 import storage from "@/lib/storage";
+import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
-
   token: string;
-
-  setToken: (token: string) => void;
-
   isAuthenticated: boolean;
-
   logout: () => void;
+  setToken: (token: string) => void;
 }
 
 interface Props {
@@ -36,6 +32,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   const logout = () => {
     storage.removeToken();
+    setTokenState("");
   };
 
   return (
