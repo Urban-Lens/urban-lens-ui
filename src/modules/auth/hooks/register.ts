@@ -34,7 +34,7 @@ export const useRegister = (
       const response = await register(registerCredentials);
       return response;
     },
-    onError: (error: Error) => {
+    onError: () => {
       toast.error("Registration failed. Please try again.");
     },
     onSettled: async (registerResponse: IRegisterResponse | undefined) => {
