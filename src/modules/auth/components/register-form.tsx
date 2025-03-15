@@ -79,11 +79,12 @@ export const RegisterForm = () => {
     },
   });
 
-  const register = useRegister((response) => {
+  const register = useRegister(() => {
     navigate("/login");
   });
 
   const onSubmit = (values: RegisterFormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...registerData } = values;
     register.mutate(registerData as IRegisterCredentials);
   };

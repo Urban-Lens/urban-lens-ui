@@ -1,13 +1,13 @@
 import AuthBanner from "@/assets/auth-banner.png"; // Make sure this asset exists
-import Logo from "@/assets/logo.png";
 import { RegisterForm } from "../components/register-form";
+import Logo from "@/components/logo";
 
 export const RegisterPage = () => {
   return (
     <main className="flex flex-row gap-12 bg-white">
-      <section className="flex flex-col flex-1 p-6 pr-50">
+      <section className="flex flex-col flex-1 p-6">
         <div className="flex justify-start mb-8">
-          <img src={Logo} alt="Urban Lens Logo" className="h-8" />
+          <Logo />
         </div>
 
         <div className="flex flex-col items-center justify-center flex-1">
@@ -28,7 +28,7 @@ export const RegisterPage = () => {
         <img
           src={AuthBanner}
           alt="Auth Banner"
-          className="h-full w-full object-contain"
+          className="flex-1 object-cover"
         />
       </section>
     </main>
