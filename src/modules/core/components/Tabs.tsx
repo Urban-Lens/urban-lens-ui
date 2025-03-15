@@ -45,7 +45,7 @@ export const Tabs = ({ children, className }: TabsProps) => {
       </div>
 
       {/* Tab Content */}
-      <div className="px-4 py-2 hover:cursor-pointer">
+      <div className="px-4  hover:cursor-pointer">
         {Children.map(children, (child) =>
           activeKey === child.props.label ? (
             <div>{child.props.children}</div>

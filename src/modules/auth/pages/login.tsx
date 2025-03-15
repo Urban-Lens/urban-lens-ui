@@ -10,8 +10,8 @@ export const LoginPage = () => {
           <Logo />
         </div>
 
-        <div className="flex flex-col items-center justify-center flex-1">
-          <div className="max-w-[500px] space-y-6">
+        <div className="flex flex-col mt-24 flex-1">
+          <div className="">
             <div>
               <h2 className="text-2xl font-semibold">Welcome back</h2>
               <p className="text-sm text-muted-foreground">

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
   const {
@@ -50,12 +51,12 @@ export const LoginForm = () => {
       {/* Sign-up Link */}
       <p className="text-sm text-gray-500 my-2">
         New Here?{" "}
-        <a
-          href="/register"
+        <Link
+          to="/register"
           className="text-primary hover:underline font-semibold"
         >
           Sign up to get started!
-        </a>
+        </Link>
       </p>
 
       {/* Submit Button */}
