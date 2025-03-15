@@ -5,7 +5,7 @@ import { Tabs, Tab } from "../components/Tabs";
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Explore", href: "/dashboard/explore" },
-  { label: "Locations", href: "/dashboard/locations" },
+  { label: "Locations", href: "/locations" },
   { label: "Campaigns", href: "/dashboard/campaigns" },
   { label: "Metrics & Analytics", href: "/dashboard/metrics" },
 ];
