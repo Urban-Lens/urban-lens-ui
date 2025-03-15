@@ -1,4 +1,3 @@
-import { Aperture } from "lucide-react";
 import { LoginForm } from "../components/login-form";
 import AuthBanner from "@/assets/auth-banner.png";
 
