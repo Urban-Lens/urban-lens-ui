@@ -15,17 +15,17 @@ const availableLocations: AvailableLocation[] = [
   {
     name: "Halfway Tree Plaza",
     lat: 18.0063,
-    lng: -76.7790,
+    lng: -76.779,
   },
   {
     name: "Maxfield Park",
-    lat: 18.0050,
-    lng: -76.7870,
+    lat: 18.005,
+    lng: -76.787,
   },
   {
     name: "Hillside Mall",
     lat: 18.0038,
-    lng: -76.7890,
+    lng: -76.789,
   },
 ];
 
@@ -40,8 +40,10 @@ const generateOSMEmbedUrl = (lat: number, lng: number): string => {
 
 export const AddLocationPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredLocations, setFilteredLocations] = useState<AvailableLocation[]>(availableLocations);
-  const [selectedLocation, setSelectedLocation] = useState<AvailableLocation | null>(null);
+  const [filteredLocations, setFilteredLocations] =
+    useState<AvailableLocation[]>(availableLocations);
+  const [selectedLocation, setSelectedLocation] =
+    useState<AvailableLocation | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -51,9 +53,7 @@ export const AddLocationPage: React.FC = () => {
     }
     const lower = searchTerm.toLowerCase();
     setFilteredLocations(
-      availableLocations.filter((loc) =>
-        loc.name.toLowerCase().includes(lower)
-      )
+      availableLocations.filter((loc) => loc.name.toLowerCase().includes(lower))
     );
   }, [searchTerm]);
 
@@ -69,7 +69,7 @@ export const AddLocationPage: React.FC = () => {
   };
 
   const fallbackLat = 18.0045;
-  const fallbackLng = -76.7880;
+  const fallbackLng = -76.788;
   const lat = selectedLocation ? selectedLocation.lat : fallbackLat;
   const lng = selectedLocation ? selectedLocation.lng : fallbackLng;
   const embedUrl = generateOSMEmbedUrl(lat, lng);
@@ -80,16 +80,15 @@ export const AddLocationPage: React.FC = () => {
       return;
     }
     console.log("User selected location:", selectedLocation);
-    // Implement further logic as needed.
   };
 
   return (
     <div className="flex flex-col md:flex-row w-full h-screen">
       {/* Left Column: Form Section */}
-      <div className="w-full md:w-1/3 p-6 bg-white">
-        <h1 className="text-2xl font-semibold mb-2">Add Location</h1>
+      <div className="w-full md:w-1/2 p-6 bg-white">
+        <h1 className="text-2xl font-semibold mb-2">Track new Location</h1>
         <p className="text-gray-500 mb-6">
-          Manage the locations you are collecting data for
+          Select the location you would like to see analytics for
         </p>
 
         <div className="mb-4">
@@ -116,7 +115,11 @@ export const AddLocationPage: React.FC = () => {
             </div>
           )}
         </div>
-        <Button disabled={!selectedLocation} className="mt-4 w-full" onClick={handleContinue}>
+        <Button
+          disabled={!selectedLocation}
+          className="mt-4 w-full"
+          onClick={handleContinue}
+        >
           Continue
         </Button>
       </div>

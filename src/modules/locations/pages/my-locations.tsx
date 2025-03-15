@@ -1,6 +1,12 @@
+import { Button } from "@/components/ui/button";
 import { LocationCard } from "../components/location-card";
+import { MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { LOCATION_ROUTES } from "../routes/routes";
 
 export const MyLocationsPage = () => {
+  const navigate = useNavigate();
+
   const sampleLocations = [
     {
       name: "Downtown Plaza",
@@ -14,6 +20,7 @@ export const MyLocationsPage = () => {
       },
       rating: 4.7,
       streamUrl: "https://example.com/stream/downtown-plaza",
+      outputUrl: "",
       thumbnail: "https://via.placeholder.com/400x300?text=Downtown+Plaza",
     },
     {
@@ -54,17 +61,27 @@ export const MyLocationsPage = () => {
   );
 
   return (
-    <div className="px-8">
-      <section className="mb-8">
-        <h1 className="text-2xl font-semibold">Your Locations</h1>
-        <p className="text-gray-500">
-          Manage the locations you are collecting data for
-        </p>
+    <div className="px-8 py-4">
+      <section className="mb-8 flex justify-between">
+        <div className="">
+          <h1 className="text-2xl font-semibold">Your Locations</h1>
+          <p className="text-gray-500">
+            Manage the locations you are collecting data for
+          </p>
+        </div>
+        <Button
+          className="flex items-center"
+          onClick={() => navigate(LOCATION_ROUTES.ADD_POI)}
+        >
+          <MapPin /> Add New Point of Interest
+        </Button>
       </section>
 
       {locationsWithStreams.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Locations with Live Streams</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Locations with Live Streams
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {locationsWithStreams.map((location, index) => (
               <LocationCard key={index} {...location} />
