@@ -30,8 +30,10 @@ const generateOSMEmbedUrl = (lat: number, lng: number): string => {
 export const AddLocationPage: React.FC = () => {
   // Search/Select mode state.
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredLocations, setFilteredLocations] = useState<AvailableLocation[]>(availableLocations);
-  const [selectedLocation, setSelectedLocation] = useState<AvailableLocation | null>(null);
+  const [filteredLocations, setFilteredLocations] =
+    useState<AvailableLocation[]>(availableLocations);
+  const [selectedLocation, setSelectedLocation] =
+    useState<AvailableLocation | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Create mode state.
@@ -44,9 +46,7 @@ export const AddLocationPage: React.FC = () => {
     }
     const lower = searchTerm.toLowerCase();
     setFilteredLocations(
-      availableLocations.filter((loc) =>
-        loc.name.toLowerCase().includes(lower)
-      )
+      availableLocations.filter((loc) => loc.name.toLowerCase().includes(lower))
     );
   }, [searchTerm]);
 
@@ -66,10 +66,7 @@ export const AddLocationPage: React.FC = () => {
   };
 
   // When the create form returns coordinates, update the selected location.
-  const handleCreateLocationSubmit = (
-    loc: AvailableLocation,
-    payload: any
-  ) => {
+  const handleCreateLocationSubmit = (loc: AvailableLocation, payload: any) => {
     setSelectedLocation(loc);
     setSearchTerm(loc.name);
     setIsCreatingLocation(false);
@@ -110,7 +107,7 @@ export const AddLocationPage: React.FC = () => {
 
         {!isCreatingLocation ? (
           <>
-            <div className="mb-4">
+            <div className="mb-2">
               <Label htmlFor="locationSearch" className="mb-2 block">
                 Select location
               </Label>
@@ -146,6 +143,18 @@ export const AddLocationPage: React.FC = () => {
                 </div>
               )}
             </div>
+            {!searchTerm && filteredLocations.length && (
+              <div className="text-sm text-gray-500 mb-2">
+                Have a place in mind?
+                <Button
+                  variant="link"
+                  className="ml-2 p-0"
+                  onClick={() => setIsCreatingLocation(true)}
+                >
+                  Add your own location
+                </Button>
+              </div>
+            )}
             <div className="flex gap-4">
               <Button
                 disabled={!selectedLocation}
