@@ -15,14 +15,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className=" ">
-      <div className="">
-        <h2 className="text-2xl font-semibold">Welcome Back!</h2>
-        <p className="text-sm text-gray-500">
-          Urban Lens provides dynamic, real-time analytics on traffic patterns,
-          vehicle movement, foot traffic, and urban safety.
-        </p>
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
 
       {/* Email Field */}
       <div className="my-4">
@@ -58,7 +51,7 @@ export const LoginForm = () => {
       <p className="text-sm text-gray-500 my-2">
         New Here?{" "}
         <a
-          href="/signup"
+          href="/register"
           className="text-primary hover:underline font-semibold"
         >
           Sign up to get started!
