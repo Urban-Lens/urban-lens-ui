@@ -3,11 +3,12 @@ import { axios } from "@/lib/axios";
 import { toast } from "sonner";
 
 export interface IRegisterCredentials {
-  name: string;
+  first_name: string;
+  last_name: string;
+  company_name: string;
   email: string;
   password: string;
   industry: string;
-  budget: number;
 }
 
 export interface IRegisterResponse {
@@ -22,7 +23,7 @@ export interface IRegisterResponse {
 const register = async (
   credentials: IRegisterCredentials
 ): Promise<IRegisterResponse> => {
-  const { data } = await axios.post<IRegisterResponse>("/auth/register", credentials);
+  const { data } = await axios.post<IRegisterResponse>("/users", credentials);
   return data;
 };
 
