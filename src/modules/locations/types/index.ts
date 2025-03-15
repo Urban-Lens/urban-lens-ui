@@ -7,7 +7,19 @@ export interface IAddress {
   country: string;
 }
 
-// src/types.ts
+export interface ChatMessage {
+  id: string;
+  content: string;
+  sender: "user" | "bot" | "system";
+  timestamp: Date;
+}
+
+export interface DataPoint {
+  time: string;
+  value1: number;
+  value2: number;
+  value3: number;
+}
 
 export interface AvailableLocation {
   name: string;
