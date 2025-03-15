@@ -4,15 +4,17 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useCreateLocation } from "../hooks/createLocation"; // Adjust the path as needed
+import { toast } from "sonner";
 
 export interface CreateLocationFormValues {
   address: string;
   description: string;
-  tags: string;
+  tags: string; // comma-separated string
   input_stream_url: string;
 }
 
-// Geocoding with notamin
+// A simple geocoding function using OpenStreetMap's Nominatim API.
 const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number }> => {
   const response = await fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
@@ -25,10 +27,7 @@ const geocodeAddress = async (address: string): Promise<{ lat: number; lng: numb
 };
 
 interface CreateLocationFormProps {
-  onSubmit: (
-    location: { name: string; lat: number; lng: number },
-    payload: any
-  ) => void;
+  onSubmit: (location: { name: string; lat: number; lng: number }, payload: any) => void;
   onCancel: () => void;
   onCoordinatesChange: (coords: { lat: number; lng: number }) => void;
 }
@@ -46,9 +45,16 @@ export const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
   });
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  // Setup the create location mutation hook.
+  const { mutate: createLocation } = useCreateLocation((response) => {
+    // On successful API response, call onSubmit with the new location.
+    onSubmit(
+      { name: formData.address, lat: response.latitude, lng: response.longitude },
+      response
+    );
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -70,7 +76,7 @@ export const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!coordinates) {
-      alert("Unable to determine location from address. Please check your address.");
+      toast.warning("Unable to determine location from address. Please check your address.");
       return;
     }
     const payload = {
@@ -78,17 +84,10 @@ export const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
       latitude: coordinates.lat,
       longitude: coordinates.lng,
       description: formData.description,
-      tags: formData.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+      tags: formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
       input_stream_url: formData.input_stream_url,
     };
-    console.log("Create Location Payload:", payload);
-    onSubmit(
-      { name: formData.address, lat: coordinates.lat, lng: coordinates.lng },
-      payload
-    );
+    createLocation(payload);
   };
 
   return (
