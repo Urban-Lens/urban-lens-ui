@@ -84,7 +84,7 @@ export const RegisterForm = () => {
   });
 
   // Call the useRegister hook. On success, navigate to "/login".
-  const register = useRegister((response) => {
+  const register = useRegister((_response) => {
     navigate("/login");
   });
 
