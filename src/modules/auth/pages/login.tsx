@@ -1,14 +1,18 @@
 import { Aperture } from "lucide-react";
+import { LoginForm } from "../components/login-form";
+import AuthBanner from "@/assets/auth-banner.png";
 
 export const LoginPage = () => {
   return (
-    <>
-      <Aperture />
-      <h1> Welcome Back</h1>
-      <p>
-        Urban Lens provides dynamic, real-time analytics on traffic patterns,
-        vehicle movement, foot traffic, and urban safety.
-      </p>
-    </>
+    <main className="grid grid-cols-2 gap-12 bg-white px-4">
+      <section className="flex flex-col gap-32">
+        <div></div>
+
+        <LoginForm />
+      </section>
+      <section>
+        <img src={AuthBanner} />
+      </section>
+    </main>
   );
 };
