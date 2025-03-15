@@ -19,7 +19,6 @@ export const LoginForm = () => {
       <div className="">
         <h2 className="text-2xl font-semibold">Welcome Back!</h2>
         <p className="text-sm text-gray-500">
-
           Urban Lens provides dynamic, real-time analytics on traffic patterns,
           vehicle movement, foot traffic, and urban safety.
         </p>
@@ -58,13 +57,20 @@ export const LoginForm = () => {
       {/* Sign-up Link */}
       <p className="text-sm text-gray-500 my-2">
         New Here?{" "}
-        <a href="/signup" className="text-primary hover:underline font-semibold">
+        <a
+          href="/signup"
+          className="text-primary hover:underline font-semibold"
+        >
           Sign up to get started!
         </a>
       </p>
 
       {/* Submit Button */}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button
+        type="submit"
+        className="w-full hover:cursor-pointer"
+        disabled={isSubmitting}
+      >
         {isSubmitting ? "Signing in..." : "Continue"}
       </Button>
     </form>
