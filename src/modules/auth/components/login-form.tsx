@@ -20,7 +20,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const loginMutation = useLogin((loginResponse) => {
-    setToken(loginResponse.access_token);
+    setToken(loginResponse.token);
     navigate("/dashboard");
   });
 
