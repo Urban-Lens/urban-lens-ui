@@ -9,51 +9,6 @@ export const MyLocationsPage = () => {
   const navigate = useNavigate();
 
   const { data: locations = [] } = useGetMyLocations();
-  const sampleLocations = [
-    {
-      name: "Downtown Plaza",
-      address: {
-        street: "123 Main St",
-        apartment: "Suite 101",
-        city: "Metropolis",
-        state: "NY",
-        zip: "10001",
-        country: "USA",
-      },
-      rating: 4.7,
-      streamUrl: "https://example.com/stream/downtown-plaza",
-      outputUrl: "",
-      thumbnail: "https://via.placeholder.com/400x300?text=Downtown+Plaza",
-    },
-    {
-      name: "City Park",
-      address: {
-        street: "456 Park Ave",
-        apartment: null,
-        city: "Metropolis",
-        state: "NY",
-        zip: "10002",
-        country: "USA",
-      },
-      rating: 4.2,
-      streamUrl: "https://example.com/stream/city-park",
-      thumbnail: "https://via.placeholder.com/400x300?text=City+Park",
-    },
-    {
-      name: "Lakeside Mall",
-      address: {
-        street: "789 Lakeshore Blvd",
-        apartment: "Unit 202",
-        city: "Lakeview",
-        state: "MI",
-        zip: "48850",
-        country: "USA",
-      },
-      rating: 4.0,
-      streamUrl: null,
-      thumbnail: null,
-    },
-  ];
 
   const locationsWithStreams = locations.filter(
     (location) => location.output_stream_url
