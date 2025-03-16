@@ -7,6 +7,8 @@ export const locationQueryKeys = {
     ["campaignRecommendation", id] as const,
   locationRecommendation: (id: string) =>
     ["locationRecommendation", id] as const,
+  businessRecommendation: (id: string) =>
+    ["businessRecommendation", id] as const,
   getLocations: ["locations"] as const,
   getMyLocations: ["myLocations"] as const,
   locationMetrics: (params: IGetLocationMetricsParams) =>

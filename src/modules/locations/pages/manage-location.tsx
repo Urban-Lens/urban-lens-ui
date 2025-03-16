@@ -18,6 +18,7 @@ import { useGetLocationRecommendation } from "../hooks/getLocationRecommendation
 import { useGetCampaignRecommendation } from "../hooks/getRecommendation";
 import { useGenerateRecommendation } from "../hooks/businessRecommendation";
 import { getYoutubeThumbnail } from "../components/location-card";
+import { useGetBusinessRecommendation } from "../hooks/businessSummary";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -43,9 +44,17 @@ const ManageLocationPage = () => {
     location?.id ?? ""
   );
 
+  const { data: businessRecommendation } = useGetBusinessRecommendation(
+    location?.id ?? ""
+  );
+
+  console.log(businessRecommendation)
+
   const { data: recommendations } = useGetCampaignRecommendation(
     location?.id ?? ""
   );
+
+
 
   // Recommendation mutation hook.
   const { mutate: generateRecommendation, data: _recommendationData } =
@@ -130,14 +139,14 @@ const ManageLocationPage = () => {
             }
           />
         )}
-
+{/* 
         <MetricsCard
           title="Today's Campaign Recommendation"
-          value="Billboard and Walkboard"
+          value={businessRecommendation?.recommendation ?? ""}
           icon={
             <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
           }
-        />
+        /> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

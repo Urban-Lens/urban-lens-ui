@@ -9,8 +9,8 @@ const ManageLocationLayout = () => {
   const navigationLinks = [
     { label: "Overview", path: "" },
     { label: "Location Stream", path: "location-stream" },
-    { label: "Visitors", path: "visitors" },
-    { label: "Campaigns", path: "campaigns" },
+    // { label: "Visitors", path: "visitors" },
+    // { label: "Campaigns", path: "campaigns" },
   ];
 
   if (isLoading) {

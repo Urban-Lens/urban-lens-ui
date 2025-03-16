@@ -36,7 +36,7 @@ const Dashboard = () => {
   const { data: locations = [] } = useGetMyLocations();
   const navigate = useNavigate();
   const [timeAggregation, setTimeAggregation] =
-    useState<TimeAggregation>("hour");
+    useState<TimeAggregation>("seconds");
 
   // Memoize metrics parameters
   const metricsParams = useMemo(

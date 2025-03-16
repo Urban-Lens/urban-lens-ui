@@ -87,3 +87,22 @@ export interface ILocationRecommendation {
   generated_at: string;
   execution_time_ms: number;
 }
+
+
+export interface IBusinessRecommendation {
+    location_id: string;
+    location_address: string;
+    evaluation_terms: string;
+    comparison_paragraph: string;
+    recommendation: string;
+    ranking: {
+      people_rank: number;
+      people_percentile: number;
+      total_locations: number;
+    };
+    full_response: string;
+    recommendation_id: number;
+    generated_at: string;
+    execution_time_ms: number;
+  }
+  
