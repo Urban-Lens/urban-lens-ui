@@ -6,6 +6,7 @@ import { useOutletContext } from "react-router-dom";
 import MetricsCard from "../components/metrics-card";
 import { ILocation } from "../types";
 import { Button } from "@/components/ui/button";
+import { HLSPlayer } from "../components/hls-player";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -13,35 +14,30 @@ interface LocationContext {
   error: Error | null;
 }
 
+const getEmbedUrl = (url: string | undefined): string | undefined => {
+  if (!url) return undefined;
+  if (url.includes("watch?v=")) {
+    const urlObj = new URL(url);
+    const videoId = urlObj.searchParams.get("v");
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+  }
+  return url;
+};
+
 const LiveStreamPage = () => {
   const { location } = useOutletContext<LocationContext>();
   const [isStreamLoading, setIsStreamLoading] = useState(true);
-  // streamType can be 'live' (default) or 'object'
+  // streamType: "live" for YouTube embed, "object" for HLS stream.
   const [streamType, setStreamType] = useState<"live" | "object">("live");
 
-  // Convert a YouTube watch URL to embed URL with autoplay
-  const getEmbedUrl = (url: string | undefined): string | undefined => {
-    if (!url) return undefined;
-    if (url.includes("watch?v=")) {
-      const urlObj = new URL(url);
-      const videoId = urlObj.searchParams.get("v");
-      if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-      }
-    }
-    return url;
-  };
-
-  // Determine which URL to use based on the selected stream type.
   const getStreamUrl = (): string | undefined => {
     if (!location) return undefined;
     if (streamType === "live") {
       return getEmbedUrl(location.input_stream_url);
     } else if (streamType === "object") {
-      // If no object detection URL is provided, fall back to the live stream.
-      return (
-        location.output_stream_url || getEmbedUrl(location.input_stream_url)
-      );
+      return "http://98.80.189.39:8080/hls_streams/rnXIjl_Rzy4/index.m3u8";
     }
     return undefined;
   };
@@ -65,7 +61,6 @@ const LiveStreamPage = () => {
         />
       </div>
 
-      {/* Toggle buttons */}
       <div className="flex gap-4">
         <Button
           variant={streamType === "live" ? "default" : "outline"}
@@ -89,14 +84,18 @@ const LiveStreamPage = () => {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         )}
-        <iframe
-          src={getStreamUrl()}
-          className="w-full h-full absolute inset-0"
-          onLoad={() => setIsStreamLoading(false)}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title="Live Stream"
-        />
+        {streamType === "object" ? (
+          <HLSPlayer url={getStreamUrl()!} autoPlay controls />
+        ) : (
+          <iframe
+            src={getEmbedUrl(location?.input_stream_url)}
+            className="w-full h-full absolute inset-0"
+            onLoad={() => setIsStreamLoading(false)}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Live Stream"
+          />
+        )}
       </div>
     </div>
   );
