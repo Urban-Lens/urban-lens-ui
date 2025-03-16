@@ -14,6 +14,19 @@ const LiveStreamPage = () => {
   const { location } = useOutletContext<LocationContext>();
   const [isStreamLoading, setIsStreamLoading] = useState(true);
 
+  const getEmbedUrl = (url: string | undefined): string | undefined => {
+    if (!url) return undefined;
+    // Check if URL includes 'watch'
+    if (url.includes("watch?v=")) {
+      const urlObj = new URL(url);
+      const videoId = urlObj.searchParams.get("v");
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    return url;
+  };
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -40,7 +53,7 @@ const LiveStreamPage = () => {
           </div>
         )}
         <iframe
-          src={location?.input_stream_url}
+          src={getEmbedUrl(location?.input_stream_url)}
           className="w-full h-full absolute inset-0"
           onLoad={() => setIsStreamLoading(false)}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
