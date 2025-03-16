@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { HLS_STREAM } from "@/config/environment";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -59,7 +60,7 @@ const LiveStreamPage = () => {
     if (streamType === "live") {
       return getEmbedUrl(location.input_stream_url);
     } else if (streamType === "object") {
-      return `http://98.80.189.39:8080/hls_streams/${location.id}/index.m3u8`;
+      return `${HLS_STREAM}/hls_streams/${location.id}/index.m3u8`;
     }
     return undefined;
   };
