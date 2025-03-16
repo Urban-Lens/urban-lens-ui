@@ -4,12 +4,16 @@ export const LOCATION_ROUTES = {
   DASHBOARD: "/dashboard",
   ADD_POI: "/locations/add-poi",
   MANAGE_LOCATION: {
-    OVERVIEW: "/locations/:id",
+    OVERVIEW: {
+      ROOT: "/locations/:id",
+      DETAIL: (locationUuid: string) => `/locations/${locationUuid}`,
+    },
     LOCATION_STREAM: "/locations/:id/location-stream",
     VISITORS: "/locations/:id/visitors",
     CAMPAIGNS: "/locations/:id/campaigns",
   },
   API: {
     GET_LOCATIONS: "/locations",
+    GET_MY_LOCATIONS: "/my-locationss",
   },
 };

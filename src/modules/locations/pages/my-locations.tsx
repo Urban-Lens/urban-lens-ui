@@ -3,10 +3,12 @@ import { LocationCard } from "../components/location-card";
 import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LOCATION_ROUTES } from "../routes/routes";
+import { useGetMyLocations } from "../hooks/getMyLocations";
 
 export const MyLocationsPage = () => {
   const navigate = useNavigate();
 
+  const { data: locations = [] } = useGetMyLocations();
   const sampleLocations = [
     {
       name: "Downtown Plaza",
@@ -53,11 +55,11 @@ export const MyLocationsPage = () => {
     },
   ];
 
-  const locationsWithStreams = sampleLocations.filter(
-    (location) => location.streamUrl
+  const locationsWithStreams = locations.filter(
+    (location) => location.output_stream_url
   );
-  const locationsWithoutStreams = sampleLocations.filter(
-    (location) => !location.streamUrl
+  const locationsWithoutStreams = locations.filter(
+    (location) => !location.output_stream_url
   );
 
   return (
@@ -84,7 +86,7 @@ export const MyLocationsPage = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {locationsWithStreams.map((location, index) => (
-              <LocationCard key={index} {...location} />
+              <LocationCard location={location} key={index} />
             ))}
           </div>
         </section>
@@ -95,7 +97,7 @@ export const MyLocationsPage = () => {
           <h2 className="text-xl font-semibold mb-4">Other Locations</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {locationsWithoutStreams.map((location, index) => (
-              <LocationCard key={index} {...location} />
+              <LocationCard location={location} key={index} />
             ))}
           </div>
         </section>
