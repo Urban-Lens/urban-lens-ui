@@ -35,12 +35,12 @@ const ManageLocationLayout = () => {
 
   return (
     <div className="flex flex-col gap-6 relative h-full flex-1">
-      <div className="flex flex-col gap-2 absolute top-0 left-0 min-h-[90vh] w-64 border-r border-gray-200 px-4 py-6">
+      <div className="flex flex-col gap-2 fixed top-32 left-0 min-h-[90vh] w-64 border-r border-gray-200 px-4 py-6 bg-background">
         <Link
           to="/locations"
           className="text-sm text-primary hover:text-primary/80 transition-colors flex items-center gap-2 mb-2 font-semibold"
         >
-          Back to Points of Interest
+          Back to Locations
         </Link>
         <p className="font-light text-lg text-muted-foreground">
           {location?.address || "Manage Location"}
@@ -51,6 +51,7 @@ const ManageLocationLayout = () => {
               <li key={link.path}>
                 <NavLink
                   to={link.path}
+                  end={link.path === ""}
                   className={({ isActive }) =>
                     `text-sm transition-colors ${
                       isActive

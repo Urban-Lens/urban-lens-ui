@@ -37,7 +37,7 @@ const LiveStreamPage = () => {
     if (streamType === "live") {
       return getEmbedUrl(location.input_stream_url);
     } else if (streamType === "object") {
-      return "http://98.80.189.39:8080/hls_streams/rnXIjl_Rzy4/index.m3u8";
+      return `http://98.80.189.39:8080/hls_streams/${location.id}/index.m3u8`;
     }
     return undefined;
   };
