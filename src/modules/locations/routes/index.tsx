@@ -26,7 +26,7 @@ export const locationRoutes: RouteObject[] = [
     element: <AddLocationPage />,
   },
   {
-    path: LOCATION_ROUTES.MANAGE_LOCATION.OVERVIEW,
+    path: LOCATION_ROUTES.MANAGE_LOCATION.OVERVIEW.ROOT,
     element: <ManageLocationLayout />,
     children: [
       {

@@ -3,10 +3,10 @@ import { Cctv, Presentation } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import locationImage from "../../../assets/location.png";
 import MetricsCard from "../components/metrics-card";
-import { Location } from "../types";
+import { ILocation } from "../types";
 
 interface LocationContext {
-  location: Location | undefined;
+  location: ILocation | undefined;
   isLoading: boolean;
   error: Error | null;
 }
