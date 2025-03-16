@@ -9,8 +9,11 @@ interface Props {
 export const LocationCard = ({ location }: Props) => {
   // Round down the rating to determine the number of filled stars.
   return (
-    <Link to={LOCATION_ROUTES.MANAGE_LOCATION.OVERVIEW.DETAIL(location.id)}>
-      <article className="px-4 py-2 border border-gray-200 rounded-xl shadow-sm bg-white">
+    <Link
+      to={LOCATION_ROUTES.MANAGE_LOCATION.OVERVIEW.DETAIL(location.id)}
+      className="px-4 py-2 border border-gray-200 rounded-xl shadow-sm bg-white hover:bg-gray-50 transition-colors duration-300"
+    >
+      <article className="">
         {/* Optional Stream Thumbnail */}
         {location.input_stream_url && location.thumbnail && (
           <div className="mb-2">

@@ -157,7 +157,7 @@ export const CreateLocationForm: React.FC<CreateLocationFormProps> = ({
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-2">
         <Button type="submit" className="w-full">
           Save Location
         </Button>
