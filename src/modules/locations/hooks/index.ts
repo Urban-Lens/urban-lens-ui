@@ -1,10 +1,10 @@
-import { GetLocationMetricsParams } from "./getLocationMetrics";
+import { IGetLocationMetricsParams } from "../types";
 
 export const locationQueryKeys = {
   geocodedAddress: (address: string) => ["geocodedAddress", address] as const,
   location: (id: string) => ["location", id] as const,
   getLocations: ["locations"] as const,
   getMyLocations: ["myLocations"] as const,
-  locationMetrics: (params: GetLocationMetricsParams) =>
+  locationMetrics: (params: IGetLocationMetricsParams) =>
     ["locationMetrics", params] as const,
 };

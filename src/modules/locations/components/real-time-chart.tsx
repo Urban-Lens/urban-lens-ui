@@ -1,5 +1,7 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CartesianGrid,
   Line,
@@ -10,6 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import { DataPoint, ILocation } from "../types";
+import { Label } from "@/components/ui/label";
+import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 
 interface RealTimeChartProps {
   locations: ILocation[];
@@ -17,22 +21,42 @@ interface RealTimeChartProps {
 }
 
 export function RealTimeChart({ data, locations }: RealTimeChartProps) {
+  // Map the passed locations to chartLocations using the address as the name.
+
   const chartLocations = locations.map((loc, index) => ({
-    id: `value${index + 1}`, // force use the old keys
+    id: `value${index + 1}`, // using old keys for now
     name: loc.address,
     color: `var(--chart-${index + 1})`,
   }));
-  
 
   const [activeKeys, setActiveKeys] = useState(() =>
     Object.fromEntries(chartLocations.map((loc) => [loc.id, true]))
   );
 
-  const toggleKey = (key: keyof typeof activeKeys) => {
+  // Aggregation filter state: "day", "hour", or "seconds"
+  const [aggregation, setAggregation] = useState<"day" | "hour" | "seconds">(
+    "hour"
+  );
+
+  const toggleKey = (key: string) => {
     setActiveKeys((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
+  };
+
+  // A tick formatter that changes based on the aggregation level.
+  const tickFormatter = (value: string) => {
+    if (aggregation === "day") {
+      const date = new Date(value);
+      return date.toLocaleDateString();
+    } else if (aggregation === "hour") {
+      const parts = value.split(":");
+      return `${parts[0]}:${parts[1]}`;
+    } else if (aggregation === "seconds") {
+      return value; // full time string including seconds
+    }
+    return value;
   };
 
   return (
@@ -43,6 +67,26 @@ export function RealTimeChart({ data, locations }: RealTimeChartProps) {
             Overall Traffic
           </p>
           <p className="text-4xl">125,000</p>
+        </div>
+        <div className="mt-4">
+          <Label
+            htmlFor="aggregation"
+            className="text-sm text-muted-foreground mr-2"
+          >
+            Aggregation:
+          </Label>
+          <select
+            id="aggregation"
+            value={aggregation}
+            onChange={(e) =>
+              setAggregation(e.target.value as "day" | "hour" | "seconds")
+            }
+            className="p-1 border rounded"
+          >
+            <option value="day">Day</option>
+            <option value="hour">Hour</option>
+            <option value="seconds">Seconds</option>
+          </select>
         </div>
       </CardHeader>
       <CardContent className="h-[320px] pb-4">
@@ -69,22 +113,13 @@ export function RealTimeChart({ data, locations }: RealTimeChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
-            margin={{
-              top: 5,
-              right: 10,
-              left: 10,
-              bottom: 5,
-            }}
+            margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="time"
               tick={{ fontSize: 12 }}
-              tickFormatter={(value) => {
-                // Show only hours and minutes for cleaner display
-                const parts = value.split(":");
-                return `${parts[0]}:${parts[1]}`;
-              }}
+              tickFormatter={tickFormatter}
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip
@@ -94,8 +129,8 @@ export function RealTimeChart({ data, locations }: RealTimeChartProps) {
                 fontSize: "12px",
               }}
               formatter={(value, name) => {
-                const location = chartLocations.find((loc) => loc.id === name);
-                return [value, location?.name ?? name];
+                const loc = chartLocations.find((l) => l.id === name);
+                return [value, loc?.name ?? name];
               }}
             />
 

@@ -2,16 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/lib/axios";
 import { locationQueryKeys } from ".";
 import { LOCATION_ROUTES } from "../routes/routes";
+import { IGetLocationMetricsParams, ILocationMetricsResponse } from "../types";
 
-export interface GetLocationMetricsParams {
-  skip?: number;
-  limit?: number;
-  address_filter?: string;
-  location_id?: string;
-  time_aggregation?: "hour" | "day" | null;
-}
-
-const getLocationMetrics = async (params: GetLocationMetricsParams) => {
+const getLocationMetrics = async (
+  params: IGetLocationMetricsParams
+): Promise<ILocationMetricsResponse> => {
   const {
     skip = 0,
     limit = 1000,
@@ -34,8 +29,8 @@ const getLocationMetrics = async (params: GetLocationMetricsParams) => {
   return data;
 };
 
-export const useGetLocationMetrics = (params: GetLocationMetricsParams) => {
-  return useQuery({
+export const useGetLocationMetrics = (params: IGetLocationMetricsParams) => {
+  return useQuery<ILocationMetricsResponse>({
     queryKey: locationQueryKeys.locationMetrics(params),
     queryFn: () => getLocationMetrics(params),
   });

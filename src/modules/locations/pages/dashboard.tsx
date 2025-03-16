@@ -11,7 +11,7 @@ import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 const Dashboard = () => {
   const { data: locations } = useGetMyLocations();
   const { data: metrics } = useGetLocationMetrics({
-    time_aggregation: "day",
+    time_aggregation: "hour",
   });
 
   console.log(metrics);
@@ -51,7 +51,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <MetricsCard
           title="Locations Tracked"
-          value={5}
+          value={locations?.length ?? 0}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
