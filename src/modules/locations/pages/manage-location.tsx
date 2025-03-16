@@ -15,6 +15,7 @@ import { TrafficComparisonCard } from "../components/traffic-chart";
 import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 import { LOCATION_ROUTES } from "../routes/routes";
 import { ILocation } from "../types";
+import { useGetLocationRecommendation } from "../hooks/getLocationRecommendation";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -36,6 +37,11 @@ const ManageLocationPage = () => {
     location_id: location?.id,
   });
 
+  const { data: locationRecommendation } = useGetLocationRecommendation(
+    location?.id ?? ""
+  );
+
+  console.log(locationRecommendation);
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
       <img
@@ -72,20 +78,33 @@ const ManageLocationPage = () => {
         <MetricsCard
           title="Number of Vehicles"
           value={Math.round(metrics?.timeseries?.[0].vehicle_count ?? 0)}
-        //   percentageChange={2.9}
-        //   comparisonValue={130}
+          //   percentageChange={2.9}
+          //   comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
         <MetricsCard
           title="Number of Pedestrians"
           value={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
-        //   percentageChange={2.9}
-        //   comparisonValue={130}
+          //   percentageChange={2.9}
+          //   comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
+        {locationRecommendation && (
+          <MetricsCard
+            title="Location Recommendation"
+            value={locationRecommendation?.evaluation_terms}
+            icon={
+              <Presentation
+                className="h-5 w-5 text-primary"
+                strokeWidth={1.5}
+              />
+            }
+          />
+        )}
+
         <MetricsCard
-          title="Location Recommendation"
-          value="Positive, Room for Business Growth"
+          title="Today's Campaign Recommendation"
+          value="Billboard and Walkboard"
           icon={
             <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
           }
@@ -93,13 +112,6 @@ const ManageLocationPage = () => {
             LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.DETAIL(
               location?.id ?? ""
             ) ?? ""
-          }
-        />
-        <MetricsCard
-          title="Today's Campaign Recommendation"
-          value="Billboard and Walkboard"
-          icon={
-            <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
           }
         />
       </div>
