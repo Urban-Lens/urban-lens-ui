@@ -26,3 +26,15 @@ export interface AvailableLocation {
   lat: number;
   lng: number;
 }
+
+export interface ILocation {
+  id: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  tags: string[];
+  input_stream_url: string;
+  output_stream_url: string | null;
+  thumbnail: string | null;
+}
