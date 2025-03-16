@@ -26,8 +26,7 @@ const trackLocation = async (
   credentials: ITrackLocationCredentials
 ): Promise<ITrackLocationResponse> => {
   const { data } = await axios.post<ITrackLocationResponse>(
-    "/locations/attach-location",
-    credentials
+    `/locations/attach-location?location_id=${credentials.location_id}&user_id=${credentials.user_id}`
   );
   return data;
 };

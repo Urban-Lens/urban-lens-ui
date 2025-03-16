@@ -10,7 +10,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Locations", href: LOCATION_ROUTES.ROOT },
   // { label: "Explore", href: LOCATION_ROUTES.EXPLORE },
-  { label: "Campaigns", href: "/dashboard/campaigns" },
+//   { label: "Campaigns", href: "/dashboard/campaigns" },
   // { label: "Metrics & Analytics", href: "/dashboard/metrics" },
 ];
 

@@ -1,12 +1,18 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { CreateLocationForm } from "../components/create-location-form";
 import { useGetLocations } from "../hooks/getLocations";
 import { ILocation } from "../types";
 import { useAuth } from "@/modules/auth/provider";
 import { useTrackLocation } from "../hooks/trackLocation";
 import { useGetAccountDetails } from "@/modules/auth/hooks/getAccountDetails";
+import { useNavigate } from "react-router-dom";
+import { LOCATION_ROUTES } from "../routes/routes";
+import { useGetMyLocations } from "../hooks/getMyLocations";
 
 const generateOSMEmbedUrl = (lat: number, lng: number): string => {
   const delta = 0.005;
@@ -20,28 +26,33 @@ const generateOSMEmbedUrl = (lat: number, lng: number): string => {
 export const AddLocationPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { data: user } = useGetAccountDetails(isAuthenticated);
+  const { data: myLocations } = useGetMyLocations();
   const { data: locations } = useGetLocations();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredLocations, setFilteredLocations] = useState<ILocation[]>(
-    locations ?? []
-  );
-  const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(
-    null
-  );
+  const [filteredLocations, setFilteredLocations] = useState<ILocation[]>(locations ?? []);
+  const [selectedLocation, setSelectedLocation] = useState<ILocation | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isCreatingLocation, setIsCreatingLocation] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!locations) return;
+    // Exclude locations that already exist in the user's myLocations list.
+    const availableLocations = myLocations
+      ? locations.filter((loc) => !myLocations.some((myLoc) => myLoc.id === loc.id))
+      : locations;
     if (!searchTerm) {
-      setFilteredLocations(locations);
+      setFilteredLocations(availableLocations);
       return;
     }
     const lower = searchTerm.toLowerCase();
     setFilteredLocations(
-      locations.filter((loc) => loc.address.toLowerCase().includes(lower))
+      availableLocations.filter((loc) =>
+        loc.address.toLowerCase().includes(lower)
+      )
     );
-  }, [searchTerm, locations]);
+  }, [searchTerm, locations, myLocations]);
 
   const handleSelectLocation = (loc: ILocation) => {
     setSelectedLocation(loc);
@@ -58,39 +69,14 @@ export const AddLocationPage: React.FC = () => {
     }
   };
 
-//   // Update coordinates from create form.
-//   const handleCoordinatesChange = (coords: {
-//     latitude: number;
-//     longitude: number;
-//   }) => {
-//     setSelectedLocation({
-//       address: "",
-//       latitude: coords.latitude,
-//       longitude: coords.longitude,
-//     } as ILocation);
-//   };
-
-//   // When the create form is submitted, update the selected location.
-//   const handleCreateLocationSubmit = (
-//     loc: { address: string; latitude: number; longitude: number },
-//     payload: any
-//   ) => {
-//     setSelectedLocation({ ...loc } as ILocation);
-//     setSearchTerm(loc.address);
-//     setIsCreatingLocation(false);
-//     console.log("Created location:", payload);
-//   };
-
   const fallbackLat = 18.0045;
   const fallbackLng = -76.788;
 
   // Use the track location hook.
-  const { mutate: trackLocation, isPending: isTracking } = useTrackLocation(
-    (response) => {
-      console.log("Location attached successfully:", response);
-      // Optionally, you can navigate to a new page or show a success toast here.
-    }
-  );
+  const { mutate: trackLocation, isPending: isTracking } = useTrackLocation((response) => {
+    console.log("Location attached successfully:", response);
+    navigate(LOCATION_ROUTES.DASHBOARD);
+  });
 
   const handleContinue = () => {
     if (!selectedLocation) {
@@ -118,81 +104,52 @@ export const AddLocationPage: React.FC = () => {
             : "Select the location you’d like to track analytics for, or add your own if it’s not listed."}
         </p>
 
-        {/* {!isCreatingLocation ? ( */}
-        <>
-          <div className="mb-4">
-            <Label htmlFor="locationSearch" className="mb-2 block">
-              Select Location
-            </Label>
-            <Input
-              id="locationSearch"
-              placeholder="Search for a location..."
-              value={searchTerm}
-              onChange={handleInputChange}
-            />
-            {dropdownOpen && searchTerm && filteredLocations.length > 0 && (
-              <div className="border border-gray-200 mt-1 rounded shadow-sm bg-white max-h-48 overflow-y-auto">
-                {filteredLocations.map((loc) => (
-                  <div
-                    key={loc.id}
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectLocation(loc)}
-                  >
-                    {loc.address}
-                  </div>
-                ))}
-              </div>
-            )}
-            {/* {searchTerm && filteredLocations.length === 0 && (
-                <div className="mt-2 text-sm text-gray-500">
-                  No matching locations found.
-                  <Button
-                    variant="link"
-                    className="ml-2 p-0"
-                    onClick={() => setIsCreatingLocation(true)}
-                  >
-                    Add your own location.
-                  </Button>
+        {!isCreatingLocation ? (
+          <>
+            <div className="mb-4">
+              <Label htmlFor="locationSearch" className="mb-2 block">
+                Select Location
+              </Label>
+              <Input
+                id="locationSearch"
+                placeholder="Search for a location..."
+                value={searchTerm}
+                onChange={handleInputChange}
+              />
+              {dropdownOpen && searchTerm && filteredLocations.length > 0 && (
+                <div className="border border-gray-200 mt-1 rounded shadow-sm bg-white max-h-48 overflow-y-auto">
+                  {filteredLocations.map((loc) => (
+                    <div
+                      key={loc.id}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleSelectLocation(loc)}
+                    >
+                      {loc.address}
+                    </div>
+                  ))}
                 </div>
-              )} */}
-            {/* {!searchTerm && filteredLocations.length > 0 && (
-                <div className="mt-2 text-sm text-gray-500">
-                  Have a location in mind?{" "}
-                  <Button
-                    variant="link"
-                    className="ml-2 p-0"
-                    onClick={() => setIsCreatingLocation(true)}
-                  >
-                    Add it.
-                  </Button>
-                </div>
-              )} */}
-          </div>
-          <div className="flex flex-col gap-4">
-            <Button
-              disabled={!selectedLocation || isTracking}
-              onClick={handleContinue}
-              className="w-full"
-            >
-              {isTracking ? "Tracking..." : "Continue"}
-            </Button>
-            {/* <p className="text-sm text-gray-500 text-center">OR</p>
-            <Button
-              variant="outline"
-              onClick={() => setIsCreatingLocation(true)}
-              className="w-full"
-            >
-              Add Your Own Location
-            </Button> */}
-          </div>
-        </>
-        {/* // ) : (
-        //   <CreateLocationForm
-        //     onSubmit={handleCreateLocationSubmit}
-        //     onCancel={() => setIsCreatingLocation(false)}
-        //     onCoordinatesChange={handleCoordinatesChange}
-        //   />
-        // )} */}
+              )}
+            </div>
+            <div className="flex flex-col gap-4">
+              <Button disabled={!selectedLocation || isTracking} onClick={handleContinue} className="w-full">
+                {isTracking ? "Tracking..." : "Continue"}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <CreateLocationForm
+            onSubmit={(loc, payload) => {
+              setSelectedLocation({ ...loc } as ILocation);
+              setSearchTerm(loc.address);
+              setIsCreatingLocation(false);
+              console.log("Created location:", payload);
+            }}
+            onCancel={() => setIsCreatingLocation(false)}
+            onCoordinatesChange={(coords) =>
+              setSelectedLocation({ address: "", latitude: coords.latitude, longitude: coords.longitude } as ILocation)
+            }
+          />
+        )}
       </div>
 
       {/* Right Column: Map Section */}

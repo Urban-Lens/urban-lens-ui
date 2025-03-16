@@ -21,7 +21,7 @@ export const MyLocationsPage = () => {
     <div className="px-8 py-4">
       <section className="mb-8 flex justify-between">
         <div className="">
-          <h1 className="text-2xl font-semibold">Your Locations</h1>
+          <h1 className="font-semibold text-lg">Your Locations</h1>
           <p className="text-gray-500">
             Manage the locations you are collecting data for
           </p>

@@ -1,5 +1,5 @@
-"use client";
-
+import { Button } from "@/components/ui/button";
+import { MapPin } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -19,7 +19,9 @@ import MetricsCard from "../components/metrics-card";
 import PointsOfInterest from "../components/poi";
 import { RealTimeChart } from "../components/real-time-chart";
 import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
-import { useGetLocations } from "../hooks/getLocations";
+import { useGetMyLocations } from "../hooks/getMyLocations";
+import { useNavigate } from "react-router-dom";
+import { LOCATION_ROUTES } from "../routes/routes";
 
 interface MetricPoint {
   timestamp: string;
@@ -31,7 +33,8 @@ interface MetricPoint {
 type TimeAggregation = "seconds" | "hour" | "day";
 
 const Dashboard = () => {
-  const { data: locations = [] } = useGetLocations();
+  const { data: locations = [] } = useGetMyLocations();
+  const navigate = useNavigate();
   const [timeAggregation, setTimeAggregation] =
     useState<TimeAggregation>("hour");
 
@@ -81,6 +84,28 @@ const Dashboard = () => {
     setTimeAggregation(value);
   }, []);
 
+  if (locations.length === 0) {
+    return (
+      <div className="px-6 py-4 flex flex-col gap-4">
+        <div>
+          <h1 className="font-semibold text-lg">Overview</h1>
+          <p className="text-sm text-gray-500">
+            See how well your locations are doing
+          </p>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <MapPin className="w-12 h-12 text-gray-400 mb-4" strokeWidth={1.5} />
+          <h3 className="text-xl font-semibold mb-2">No locations yet</h3>
+          <p className="text-gray-500 mb-4">
+            Start by adding your first location to monitor
+          </p>
+          <Button onClick={() => navigate(LOCATION_ROUTES.ADD_POI)}>
+            Add Your First Location
+          </Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <TooltipProvider>
       <div className="px-6 py-4 flex flex-col gap-4">
