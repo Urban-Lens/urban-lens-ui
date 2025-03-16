@@ -5,7 +5,7 @@ import { LOCATION_ROUTES } from "../routes/routes";
 import { ILocation } from "../types";
 
 const getMyLocations = async () => {
-  return (await axios.get<ILocation[]>(LOCATION_ROUTES.API.GET_LOCATIONS)).data;
+  return (await axios.get<ILocation[]>(LOCATION_ROUTES.API.GET_MY_LOCATIONS)).data;
 };
 
 export const useGetMyLocations = () => {

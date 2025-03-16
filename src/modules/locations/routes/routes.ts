@@ -22,7 +22,7 @@ export const LOCATION_ROUTES = {
   },
   API: {
     GET_LOCATIONS: "/locations",
-    GET_MY_LOCATIONS: "/my-locationss",
+    GET_MY_LOCATIONS: "/locations/me/",
     GET_LOCATION_METRICS: "/analytics/metrics",
     GET_CAMPAIGN_RECCOMENDATION: (locationId: string) =>
       `/analytics/business-recommendation?location_id=${locationId}`,
