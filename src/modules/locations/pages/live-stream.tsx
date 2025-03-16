@@ -22,7 +22,7 @@ interface LocationContext {
   error: Error | null;
 }
 
-const getEmbedUrl = (url: string | undefined): string | undefined => {
+export const getEmbedUrl = (url: string | undefined): string | undefined => {
   if (!url) return undefined;
   if (url.includes("watch?v=")) {
     const urlObj = new URL(url);

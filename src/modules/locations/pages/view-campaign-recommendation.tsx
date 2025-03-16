@@ -50,14 +50,17 @@ export const ViewCampaignRecommendationPage = () => {
   }, [location, generateRecommendation]);
 
   const {
-    data: recommendation,
+    data: recommendations,
     isLoading,
     error,
   } = useGetCampaignRecommendation(location?.id ?? "");
 
   // Format the date for display
+
+  const recommendation = recommendations && recommendations[0];
+
   const formattedDate =
-    recommendation && new Date(recommendation.generated_at).toLocaleString();
+    recommendation && new Date(recommendation.timestamp).toLocaleString();
 
   if (isLoading || !recommendation) {
     return (

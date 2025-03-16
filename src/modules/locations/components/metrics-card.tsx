@@ -47,7 +47,7 @@ export default function MetricsCard({
             typeof value === "number" ? "text-3xl" : "text-xl"
           } font-semibold text-gray-900 leading-none`}
         >
-          {value}
+          {typeof value === "number" ? Math.round(value) : value}
         </span>
       </div>
 
@@ -55,7 +55,9 @@ export default function MetricsCard({
         <div className="mt-6 flex items-center justify-between">
           <span className="text-xs text-gray-500">Compared to yesterday</span>
           <span className="text-xs font-medium text-gray-900">
-            {comparisonValue}
+            {typeof comparisonValue === "number"
+              ? Math.round(comparisonValue)
+              : comparisonValue}
           </span>
         </div>
       )}

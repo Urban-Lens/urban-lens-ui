@@ -8,7 +8,7 @@ export interface IBusinessRecommendation {
   recommendations: string[];
   industry: string;
   recommendation_id: number;
-  generated_at: string;
+  timestamp: string;
   execution_time_ms: number;
 }
 
