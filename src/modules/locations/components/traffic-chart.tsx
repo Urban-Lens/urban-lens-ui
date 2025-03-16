@@ -64,7 +64,7 @@ export function TrafficComparisonCard({
                 strokeWidth={2}
                 nameKey="name"
               >
-                {data.map((entry, index) => (
+                {data.map((_entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
