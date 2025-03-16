@@ -60,7 +60,7 @@ const ManageLocationPage = () => {
               setAggregation(value as "hour" | "day" | "seconds")
             }
           >
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-32 border-gray-100">
               <SelectValue placeholder="Select Aggregation" />
             </SelectTrigger>
             <SelectContent>
@@ -69,9 +69,6 @@ const ManageLocationPage = () => {
               <SelectItem value="seconds">Seconds</SelectItem>
             </SelectContent>
           </Select>
-          <span className="text-sm text-muted-foreground">
-            Current: {aggregationLabel}
-          </span>
         </div>
       </div>
 

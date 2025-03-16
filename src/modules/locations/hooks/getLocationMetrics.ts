@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/lib/axios";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { locationQueryKeys } from ".";
 import { LOCATION_ROUTES } from "../routes/routes";
 import { IGetLocationMetricsParams, ILocationMetricsResponse } from "../types";
@@ -29,9 +29,16 @@ const getLocationMetrics = async (
   return data;
 };
 
-export const useGetLocationMetrics = (params: IGetLocationMetricsParams) => {
+export const useGetLocationMetrics = (
+  params: IGetLocationMetricsParams,
+  options?: Omit<
+    UseQueryOptions<ILocationMetricsResponse>,
+    "queryKey" | "queryFn"
+  >
+) => {
   return useQuery<ILocationMetricsResponse>({
     queryKey: locationQueryKeys.locationMetrics(params),
     queryFn: () => getLocationMetrics(params),
+    ...options,
   });
 };

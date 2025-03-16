@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-interface MetricsCardProps {
-  title: string;
+interface Props {
+  title: ReactNode;
   value: string | number;
   percentageChange?: number;
   comparisonValue?: number;
@@ -16,7 +16,7 @@ export default function MetricsCard({
   comparisonValue,
   isPositive = true,
   icon,
-}: MetricsCardProps) {
+}: Props) {
   return (
     <div className="rounded-lg bg-white p-4 border border-gray-100 hover:border-gray-200 transition-colors">
       <div className="flex items-center justify-between">

@@ -1,94 +1,217 @@
-import { Cctv, Presentation } from "lucide-react";
+"use client";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Cctv, HelpCircle, Presentation } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import MetricsCard from "../components/metrics-card";
-import { useEffect, useState } from "react";
-import { RealTimeChart } from "../components/real-time-chart";
-import { generateRandomData } from "@/lib/utils";
-import { DataPoint } from "../types";
 import PointsOfInterest from "../components/poi";
-import { useGetMyLocations } from "../hooks/getMyLocations";
+import { RealTimeChart } from "../components/real-time-chart";
 import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
+import { useGetLocations } from "../hooks/getLocations";
+
+interface MetricPoint {
+  timestamp: string;
+  source_id: string;
+  people_count: number;
+  vehicle_count: number;
+}
+
+type TimeAggregation = "seconds" | "hour" | "day";
 
 const Dashboard = () => {
-  const { data: locations } = useGetMyLocations();
-  const { data: metrics } = useGetLocationMetrics({
-    time_aggregation: "hour",
-  });
+  const { data: locations = [] } = useGetLocations();
+  const [timeAggregation, setTimeAggregation] =
+    useState<TimeAggregation>("hour");
 
-  const [chartData, setChartData] = useState<DataPoint[]>(
-    generateRandomData(20)
+  // Memoize metrics parameters
+  const metricsParams = useMemo(
+    () => ({
+      limit: timeAggregation === "seconds" ? 200 : 1000,
+      time_aggregation: timeAggregation === "seconds" ? "" : timeAggregation,
+    }),
+    [timeAggregation]
   );
 
-  const averageTraffic = metrics
-    ? (metrics?.averages.avg_people + metrics?.averages.avg_vehicles) / 2
-    : 0;
+  // Memoize query options
+  const queryOptions = useMemo(
+    () => ({
+      refetchInterval:
+        timeAggregation === "seconds"
+          ? 1000
+          : timeAggregation === "hour"
+          ? 60000
+          : 3600000,
+    }),
+    [timeAggregation]
+  );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setChartData((prevData) => {
-        const newData = [
-          ...prevData.slice(1),
-          {
-            time: new Date().toLocaleTimeString(),
-            value1: Math.floor(Math.random() * 100),
-            value2: Math.floor(Math.random() * 80),
-            value3: Math.floor(Math.random() * 60),
-          },
-        ];
-        return newData;
-      });
-    }, 2000);
+  const { data: metricsData } = useGetLocationMetrics(
+    metricsParams,
+    queryOptions
+  );
 
-    return () => clearInterval(interval);
+  // Transform metrics data for the chart
+  const chartData = useMemo(() => {
+    if (!metricsData?.timeseries) return [];
+
+    return metricsData.timeseries.map((metric: MetricPoint) => {
+      const point: { time: string; [key: string]: string | number } = {
+        time: new Date(metric.timestamp).toISOString(),
+      };
+
+      point[metric.source_id] = metric.people_count + metric.vehicle_count;
+
+      return point;
+    });
+  }, [metricsData]);
+
+  const handleTimeAggregationChange = useCallback((value: TimeAggregation) => {
+    setTimeAggregation(value);
   }, []);
 
   return (
-    <div className="px-6 py-4 flex flex-col gap-4">
-      <div>
-        <h1 className="font-semibold text-lg">Overview</h1>
-        <p className="text-sm text-gray-500">
-          See how well your locations are doing
-        </p>
-      </div>
+    <TooltipProvider>
+      <div className="px-6 py-4 flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="font-semibold text-lg">Overview</h1>
+            <p className="text-sm text-gray-500">
+              See how well your locations are doing
+            </p>
+          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                <Select
+                  value={timeAggregation}
+                  onValueChange={handleTimeAggregationChange}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select time aggregation" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="seconds">Seconds</SelectItem>
+                    <SelectItem value="hour">Hour</SelectItem>
+                    <SelectItem value="day">Day</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Select time interval for data aggregation:</p>
+              <ul className="list-disc list-inside text-sm">
+                <li>Seconds: Real-time updates every second</li>
+                <li>Hour: Hourly aggregated data</li>
+                <li>Day: Daily aggregated data</li>
+              </ul>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricsCard
-          title="Locations Tracked"
-          value={locations?.length ?? 0}
-          percentageChange={2.9}
-          comparisonValue={130}
-          icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
-        />
-        <MetricsCard
-          title="Average Daily Traffic"
-          value={averageTraffic}
-          percentageChange={2.9}
-          comparisonValue={130}
-          icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
-        />
-        <MetricsCard
-          title="Location Recommendation"
-          value="Positive, Room for Business Growth"
-          icon={
-            <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
-          }
-        />
-        <MetricsCard
-          title="Today's Campaign Recommendation"
-          value="Billboard and Walkboard"
-          icon={
-            <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
-          }
-        />
-      </div>
-      <div className="flex flex-row gap-6 flex-wrap">
-        <div className="flex-1/2">
-          <RealTimeChart locations={locations ?? []} data={chartData} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <MetricsCard
+            title={
+              <div className="flex items-center gap-3">
+                <span>Locations Tracked</span>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Total number of locations being monitored</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            }
+            value={locations.length}
+            icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
+            // isPositive={true}
+            // percentageChange={12}
+            // comparisonValue={locations.length - 2}
+          />
+
+          <MetricsCard
+            title={
+              <div className="flex items-center gap-3">
+                <span>Current Total Traffic</span>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Overall average traffic across all locations:</p>
+                    <ul className="list-disc list-inside text-sm">
+                      <li>Sum of average people and vehicles</li>
+                      <li>Updates based on selected time interval</li>
+                    </ul>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            }
+            value={Math.round(
+              (metricsData?.averages.avg_people ?? 0) +
+                (metricsData?.averages.avg_vehicles ?? 0)
+            )}
+            icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
+            // isPositive={true}
+            // percentageChange={8}
+            // comparisonValue={Math.round(
+            //   ((metricsData?.averages.avg_people ?? 0) +
+            //     (metricsData?.averages.avg_vehicles ?? 0)) *
+            //     0.92
+            // )}
+          />
+
+          <MetricsCard
+            title="Location Recommendation"
+            value="Positive, Room for Business Growth"
+            icon={
+              <Presentation
+                className="h-5 w-5 text-primary"
+                strokeWidth={1.5}
+              />
+            }
+            isPositive={true}
+          />
+          <MetricsCard
+            title="Today's Campaign Recommendation"
+            value="Billboard and Walkboard"
+            icon={
+              <Presentation
+                className="h-5 w-5 text-primary"
+                strokeWidth={1.5}
+              />
+            }
+            isPositive={true}
+          />
         </div>
-        <div className="flex-1">
-          <PointsOfInterest locations={locations ?? []} />
+        <div className="flex flex-row gap-6 flex-wrap">
+          <div className="flex-1/2">
+            <RealTimeChart
+              locations={locations}
+              data={chartData}
+              timeAggregation={timeAggregation}
+            />
+          </div>
+          <div className="flex-1">
+            <PointsOfInterest locations={locations} metricsData={metricsData} />
+          </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
