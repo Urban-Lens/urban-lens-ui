@@ -69,10 +69,12 @@ const Dashboard = () => {
   const chartData = useMemo(() => {
     if (!metricsData?.timeseries) return [];
 
-    return metricsData.timeseries.map((metric: MetricPoint) => {
-      const point: { time: string; [key: string]: string | number } = {
-        time: new Date(metric.timestamp).toISOString(),
-      };
+    return metricsData.timeseries
+      .reverse()
+      .map((metric: MetricPoint) => {
+        const point: { time: string; [key: string]: string | number } = {
+          time: new Date(metric.timestamp).toISOString(),
+        };
 
       point[metric.source_id] = metric.people_count + metric.vehicle_count;
 

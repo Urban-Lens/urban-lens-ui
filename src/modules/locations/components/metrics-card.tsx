@@ -65,7 +65,7 @@ export default function MetricsCard({
       {detailsUrl && (
         <div className="mt-4">
           <Link to={detailsUrl}>
-            <Button variant="link">View Details</Button>
+            <Button variant="link" className="px-0">View Details</Button>
           </Link>
         </div>
       )}

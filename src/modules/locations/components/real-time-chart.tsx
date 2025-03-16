@@ -149,7 +149,6 @@ export function RealTimeChart({
             activeDot={{ r: 6 }}
             dot={false}
             connectNulls
-            isAnimationActive={false}
           />
         );
       }),
