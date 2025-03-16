@@ -29,6 +29,9 @@ interface RealTimeChartProps {
   timeAggregation: "hour" | "day" | "seconds";
 }
 
+const MOVING_AVERAGE_WINDOW = 5;
+const FORECAST_PERIODS = 5;
+
 export function RealTimeChart({
   data,
   locations,
@@ -134,24 +137,101 @@ export function RealTimeChart({
     [chartLocations, activeKeys, toggleKey]
   );
 
-  // Memoize the chart lines
+  // Update the forecast data generation
+  const { processedData, forecastData } = useMemo(() => {
+    if (!data.length) return { processedData: [], forecastData: [] };
+
+    // Calculate moving averages
+    const movingAverages = locations.map((location) => {
+      const values = data.map((d) => Number(d[location.id]) || 0);
+      return values.map((_, index) => {
+        const start = Math.max(0, index - MOVING_AVERAGE_WINDOW + 1);
+        const subset = values.slice(start, index + 1);
+        return subset.reduce((a, b) => a + b, 0) / subset.length;
+      });
+    });
+
+    // Generate forecast data
+    const lastValues = movingAverages.map((ma) => ma[ma.length - 1] || 0);
+    const forecast = [];
+    const lastTime = new Date(data[data.length - 1].time);
+    const interval =
+      timeAggregation === "hour"
+        ? 3600000
+        : timeAggregation === "day"
+        ? 86400000
+        : 1000;
+
+    // Start forecast from last data point
+    for (let i = 0; i < FORECAST_PERIODS; i++) {
+      const newTime = new Date(lastTime.getTime() + (i + 1) * interval);
+      const point: ChartDataPoint = {
+        time: newTime.toISOString(),
+        isForecast: true,
+        // Store forecast values in separate keys
+        ...Object.fromEntries(
+          locations.map((loc, idx) => [`${loc.id}-forecast`, lastValues[idx]])
+        ),
+      };
+      forecast.push(point);
+    }
+
+    // Combine data with moving averages (without forecast flag)
+    const processed = data.map((d, index) => ({
+      ...d,
+      ...Object.fromEntries(
+        locations.map((loc, idx) => [
+          `${loc.id}-ma`,
+          movingAverages[idx][index],
+        ])
+      ),
+    }));
+
+    return { processedData: processed, forecastData: forecast };
+  }, [data, locations, timeAggregation]);
+
+  // Update the chartLines to use separate forecast keys
   const chartLines = useMemo(
     () =>
-      chartLocations.map((location) => {
+      chartLocations.flatMap((location) => {
         if (!activeKeys[location.id]) return null;
-        return (
+
+        return [
+          // Original data line (solid)
           <Line
             key={location.id}
             type="monotone"
             dataKey={location.id}
             stroke={location.color}
             strokeWidth={2}
-            activeDot={{ r: 6 }}
+            dot={false}
+            isAnimationActive={false}
+          />,
+          // Historical moving average (solid)
+          <Line
+            key={`${location.id}-ma`}
+            type="monotone"
+            dataKey={`${location.id}-ma`}
+            stroke={location.color}
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+            strokeOpacity={0.7}
+          />,
+          // Forecast line (dotted)
+          <Line
+            key={`${location.id}-forecast`}
+            type="monotone"
+            dataKey={`${location.id}-forecast`}
+            stroke={location.color}
+            strokeWidth={2}
+            strokeDasharray="5 5"
             dot={false}
             connectNulls
             isAnimationActive={false}
-          />
-        );
+            strokeOpacity={0.7}
+          />,
+        ];
       }),
     [chartLocations, activeKeys]
   );

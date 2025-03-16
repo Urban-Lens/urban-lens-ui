@@ -1,10 +1,3 @@
-import { Cctv, Presentation } from "lucide-react";
-import { useOutletContext } from "react-router-dom";
-import locationImage from "../../../assets/location.png";
-import MetricsCard from "../components/metrics-card";
-import { ILocation } from "../types";
-import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -12,7 +5,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Cctv, Presentation } from "lucide-react";
+import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import locationImage from "../../../assets/location.png";
+import MetricsCard from "../components/metrics-card";
+import { PedestrianTrafficCard } from "../components/pedestrian-chart";
+import { TrafficComparisonCard } from "../components/traffic-chart";
+import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 import { LOCATION_ROUTES } from "../routes/routes";
+import { ILocation } from "../types";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -69,16 +71,16 @@ const ManageLocationPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <MetricsCard
           title="Number of Vehicles"
-          value={metrics?.timeseries?.[0].vehicle_count ?? 0}
-          percentageChange={2.9}
-          comparisonValue={130}
+          value={Math.round(metrics?.timeseries?.[0].vehicle_count ?? 0)}
+        //   percentageChange={2.9}
+        //   comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
         <MetricsCard
           title="Number of Pedestrians"
-          value={metrics?.timeseries?.[0].people_count ?? 0}
-          percentageChange={2.9}
-          comparisonValue={130}
+          value={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
+        //   percentageChange={2.9}
+        //   comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
         <MetricsCard
@@ -99,6 +101,24 @@ const ManageLocationPage = () => {
           icon={
             <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
           }
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <PedestrianTrafficCard
+          currentCount={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
+          percentageChange={2.9}
+          timeseriesData={metrics?.timeseries ?? []}
+        />
+        <TrafficComparisonCard
+          totalCount={Math.round(
+            (metrics?.timeseries?.[0].people_count ?? 0) +
+              (metrics?.timeseries?.[0].vehicle_count ?? 0)
+          )}
+          pedestrianCount={Math.round(
+            metrics?.timeseries?.[0].people_count ?? 0
+          )}
+          vehicleCount={Math.round(metrics?.timeseries?.[0].vehicle_count ?? 0)}
         />
       </div>
     </div>
