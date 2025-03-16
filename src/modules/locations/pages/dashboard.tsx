@@ -69,7 +69,7 @@ const Dashboard = () => {
           }
         />
       </div>
-      <div className="flex flex-row gap-6">
+      <div className="flex flex-row gap-6 flex-wrap">
         <div className="flex-1/2">
           <RealTimeChart data={chartData} />
         </div>

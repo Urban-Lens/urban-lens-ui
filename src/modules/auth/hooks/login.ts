@@ -7,15 +7,7 @@ import { ILoginCredentials, ILoginResponse } from "../types";
 const login = async (
   credentials: ILoginCredentials
 ): Promise<ILoginResponse> => {
-  const formData = new URLSearchParams();
-  formData.append("password", credentials.password);
-  formData.append("username", credentials.email);
-
-  const { data } = await axios.post<ILoginResponse>("/auth/login", formData, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
+  const { data } = await axios.post<ILoginResponse>("/auth/login", credentials);
   return data;
 };
 
