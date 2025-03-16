@@ -15,5 +15,6 @@ export const LOCATION_ROUTES = {
   API: {
     GET_LOCATIONS: "/locations",
     GET_MY_LOCATIONS: "/my-locationss",
+    GET_LOCATION_METRICS: "/analytics/metrics",
   },
 };

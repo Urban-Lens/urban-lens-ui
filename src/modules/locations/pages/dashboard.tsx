@@ -1,12 +1,21 @@
 import { Cctv, Presentation } from "lucide-react";
 import MetricsCard from "../components/metrics-card";
 import { useEffect, useState } from "react";
-import {  RealTimeChart } from "../components/real-time-chart";
+import { RealTimeChart } from "../components/real-time-chart";
 import { generateRandomData } from "@/lib/utils";
 import { DataPoint } from "../types";
 import PointsOfInterest from "../components/poi";
+import { useGetMyLocations } from "../hooks/getMyLocations";
+import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 
 const Dashboard = () => {
+  const { data: locations } = useGetMyLocations();
+  const { data: metrics } = useGetLocationMetrics({
+    time_aggregation: "day",
+  });
+
+  console.log(metrics);
+
   const [chartData, setChartData] = useState<DataPoint[]>(
     generateRandomData(20)
   );
@@ -71,10 +80,10 @@ const Dashboard = () => {
       </div>
       <div className="flex flex-row gap-6 flex-wrap">
         <div className="flex-1/2">
-          <RealTimeChart data={chartData} />
+          <RealTimeChart locations={locations ?? []} data={chartData} />
         </div>
         <div className="flex-1">
-          <PointsOfInterest />
+          <PointsOfInterest locations={locations ?? []} />
         </div>
       </div>
     </div>

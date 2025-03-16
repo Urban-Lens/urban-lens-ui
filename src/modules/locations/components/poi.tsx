@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetMyLocations } from "../hooks/getMyLocations";
 import { LOCATION_ROUTES } from "../routes/routes";
+import { ILocation } from "../types";
 
 interface PointOfInterest {
   id: string;
@@ -11,9 +11,13 @@ interface PointOfInterest {
   votes: number;
 }
 
-export function PointsOfInterest() {
+interface Props {
+  locations: ILocation[];
+}
+
+export function PointsOfInterest({ locations }: Props) {
   const navigate = useNavigate();
-  const { data: locations } = useGetMyLocations();
+
   const [points, setPoints] = useState<PointOfInterest[]>([]);
 
   // When locations are fetched, map them to points with random initial votes.

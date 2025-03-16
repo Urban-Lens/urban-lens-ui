@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import {
@@ -11,22 +9,23 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DataPoint } from "../types";
+import { DataPoint, ILocation } from "../types";
 
 interface RealTimeChartProps {
+  locations: ILocation[];
   data: DataPoint[];
 }
 
-const locations = [
-  { id: "value1", name: "Pavillion Mall", color: "var(--chart-1)" },
-  { id: "value2", name: "Clock tower Plaza", color: "var(--chart-2)" },
-  { id: "value3", name: "Liguanea Plaza", color: "var(--chart-3)" },
-  { id: "value4", name: "Barbican", color: "var(--chart-4)" },
-] as const;
+export function RealTimeChart({ data, locations }: RealTimeChartProps) {
+  const chartLocations = locations.map((loc, index) => ({
+    id: `value${index + 1}`, // force use the old keys
+    name: loc.address,
+    color: `var(--chart-${index + 1})`,
+  }));
+  
 
-export function RealTimeChart({ data }: RealTimeChartProps) {
   const [activeKeys, setActiveKeys] = useState(() =>
-    Object.fromEntries(locations.map((loc) => [loc.id, true]))
+    Object.fromEntries(chartLocations.map((loc) => [loc.id, true]))
   );
 
   const toggleKey = (key: keyof typeof activeKeys) => {
@@ -48,7 +47,7 @@ export function RealTimeChart({ data }: RealTimeChartProps) {
       </CardHeader>
       <CardContent className="h-[320px] pb-4">
         <div className="flex flex-wrap gap-2 mb-4">
-          {locations.map((location) => (
+          {chartLocations.map((location) => (
             <button
               key={location.id}
               onClick={() => toggleKey(location.id)}
@@ -95,12 +94,12 @@ export function RealTimeChart({ data }: RealTimeChartProps) {
                 fontSize: "12px",
               }}
               formatter={(value, name) => {
-                const location = locations.find((loc) => loc.id === name);
+                const location = chartLocations.find((loc) => loc.id === name);
                 return [value, location?.name ?? name];
               }}
             />
 
-            {locations.map(
+            {chartLocations.map(
               (location) =>
                 activeKeys[location.id] && (
                   <Line

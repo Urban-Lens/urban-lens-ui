@@ -38,3 +38,13 @@ export interface ILocation {
   output_stream_url: string | null;
   thumbnail: string | null;
 }
+
+
+export interface IGetLocationMetricsParams {
+    skip?: number;
+    limit?: number;
+    address_filter?: string;
+    location_id?: string;
+    time_aggregation?: "hour" | "day" | null;
+  }
+  
