@@ -7,6 +7,7 @@ import LiveStreamPage from "../pages/live-stream";
 import ManageLocationPage from "../pages/manage-location";
 import { MyLocationsPage } from "../pages/my-locations";
 import { LOCATION_ROUTES } from "./routes";
+import ViewCampaignRecommendationPage from "../pages/view-campaign-recommendation";
 
 export const locationRoutes: RouteObject[] = [
   {
@@ -36,6 +37,10 @@ export const locationRoutes: RouteObject[] = [
       {
         path: LOCATION_ROUTES.MANAGE_LOCATION.LOCATION_STREAM,
         element: <LiveStreamPage />,
+      },
+      {
+        path: LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.ROOT,
+        element: <ViewCampaignRecommendationPage />,
       },
       // {
       //   path: LOCATION_ROUTES.MANAGE_LOCATION.VISITORS,

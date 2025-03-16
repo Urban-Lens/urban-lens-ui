@@ -1,7 +1,5 @@
-"use client";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -13,7 +11,6 @@ import {
 } from "recharts";
 import { DataPoint, ILocation } from "../types";
 import { Label } from "@/components/ui/label";
-import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 
 interface RealTimeChartProps {
   locations: ILocation[];

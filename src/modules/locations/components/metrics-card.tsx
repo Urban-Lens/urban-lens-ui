@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface MetricsCardProps {
   title: string;
@@ -7,6 +9,7 @@ interface MetricsCardProps {
   comparisonValue?: number;
   isPositive?: boolean;
   icon: ReactNode;
+  detailsUrl?: string; // Optional prop to navigate to details.
 }
 
 export default function MetricsCard({
@@ -16,6 +19,7 @@ export default function MetricsCard({
   comparisonValue,
   isPositive = true,
   icon,
+  detailsUrl,
 }: MetricsCardProps) {
   return (
     <div className="rounded-lg bg-white p-4 border border-gray-100 hover:border-gray-200 transition-colors">
@@ -30,7 +34,7 @@ export default function MetricsCard({
                 isPositive ? "text-green-600" : "text-red-600"
               }`}
             >
-              {percentageChange}%{isPositive ? "↑" : "↓"}
+              {percentageChange}% {isPositive ? "↑" : "↓"}
             </span>
           )}
           <div className="ml-auto">{icon}</div>
@@ -53,6 +57,14 @@ export default function MetricsCard({
           <span className="text-xs font-medium text-gray-900">
             {comparisonValue}
           </span>
+        </div>
+      )}
+
+      {detailsUrl && (
+        <div className="mt-4">
+          <Link to={detailsUrl}>
+            <Button variant="link">View Details</Button>
+          </Link>
         </div>
       )}
     </div>
