@@ -81,8 +81,6 @@ export const AddLocationPage: React.FC = () => {
 
   const fallbackLat = 18.0045;
   const fallbackLng = -76.788;
-  const lat = selectedLocation ? selectedLocation.lat : fallbackLat;
-  const lng = selectedLocation ? selectedLocation.lng : fallbackLng;
   // const embedUrl = generateOSMEmbedUrl(lat, lng);
 
   const handleContinue = () => {
