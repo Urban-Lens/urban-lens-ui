@@ -6,9 +6,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Cctv, Presentation } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import locationImage from "../../../assets/location.png";
 import MetricsCard from "../components/metrics-card";
 import { PedestrianTrafficCard } from "../components/pedestrian-chart";
 import { TrafficComparisonCard } from "../components/traffic-chart";
@@ -16,6 +15,9 @@ import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
 import { LOCATION_ROUTES } from "../routes/routes";
 import { ILocation } from "../types";
 import { useGetLocationRecommendation } from "../hooks/getLocationRecommendation";
+import { useGetCampaignRecommendation } from "../hooks/getRecommendation";
+import { useGenerateRecommendation } from "../hooks/businessRecommendation";
+import { getYoutubeThumbnail } from "../components/location-card";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -41,11 +43,33 @@ const ManageLocationPage = () => {
     location?.id ?? ""
   );
 
-  console.log(locationRecommendation);
+  const { data: recommendations } = useGetCampaignRecommendation(
+    location?.id ?? ""
+  );
+
+  // Recommendation mutation hook.
+  const { mutate: generateRecommendation, data: _recommendationData } =
+    useGenerateRecommendation();
+
+  // On mount, if location available, generate recommendation.
+  useEffect(() => {
+    if (!recommendations && location) {
+      generateRecommendation(location.id);
+    }
+  }, [location, generateRecommendation]);
+
+  // If there's an input_stream_url, try to get the YouTube thumbnail.
+  const youtubeThumbnail =
+    location && location.input_stream_url
+      ? getYoutubeThumbnail(location.input_stream_url)
+      : undefined;
+  // Use YouTube thumbnail if available, otherwise fallback to location.thumbnail.
+  const thumbnailSrc = youtubeThumbnail;
+
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
       <img
-        src={location?.thumbnail || locationImage}
+        src={thumbnailSrc}
         alt={location?.address || "Location"}
         className="w-full h-64 object-cover rounded"
       />
@@ -99,6 +123,11 @@ const ManageLocationPage = () => {
                 strokeWidth={1.5}
               />
             }
+            detailsUrl={
+              LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.DETAIL(
+                location?.id ?? ""
+              ) ?? ""
+            }
           />
         )}
 
@@ -108,11 +137,6 @@ const ManageLocationPage = () => {
           icon={
             <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
           }
-          detailsUrl={
-            LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.DETAIL(
-              location?.id ?? ""
-            ) ?? ""
-          }
         />
       </div>
 
@@ -120,7 +144,7 @@ const ManageLocationPage = () => {
         <PedestrianTrafficCard
           currentCount={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
           percentageChange={2.9}
-          timeseriesData={metrics?.timeseries ?? []}
+          timeseriesData={metrics?.timeseries.reverse() ?? []}
         />
         <TrafficComparisonCard
           totalCount={Math.round(

@@ -14,8 +14,6 @@ import {
 import { MapPin, Loader2, CalendarIcon, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useGenerateRecommendation } from "../hooks/businessRecommendation";
-import { useEffect } from "react";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -37,17 +35,6 @@ const formatRecommendation = (text: string) => {
 
 export const ViewCampaignRecommendationPage = () => {
   const { location } = useOutletContext<LocationContext>();
-
-  // Recommendation mutation hook.
-  const { mutate: generateRecommendation, data: _recommendationData } =
-    useGenerateRecommendation();
-
-  // On mount, if location available, generate recommendation.
-  useEffect(() => {
-    if (location?.id) {
-      generateRecommendation(location.id);
-    }
-  }, [location, generateRecommendation]);
 
   const {
     data: recommendations,

@@ -11,10 +11,10 @@ export const MyLocationsPage = () => {
   const { data: locations = [] } = useGetMyLocations();
 
   const locationsWithStreams = locations.filter(
-    (location) => location.output_stream_url
+    (location) => location.input_stream_url
   );
   const locationsWithoutStreams = locations.filter(
-    (location) => !location.output_stream_url
+    (location) => !location.input_stream_url
   );
 
   return (
