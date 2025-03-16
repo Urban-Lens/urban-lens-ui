@@ -1,18 +1,31 @@
-import locationImage from "../../../assets/location.png";
 import { Button } from "@/components/ui/button";
-import { Presentation } from "lucide-react";
+import { Cctv, Presentation } from "lucide-react";
+import { useOutletContext } from "react-router-dom";
+import locationImage from "../../../assets/location.png";
 import MetricsCard from "../components/metrics-card";
-import { Cctv } from "lucide-react";
+import { Location } from "../types";
+
+interface LocationContext {
+  location: Location | undefined;
+  isLoading: boolean;
+  error: Error | null;
+}
 
 const ManageLocationPage = () => {
+  const { location } = useOutletContext<LocationContext>();
+
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
-      <img src={locationImage} alt="Location" className="w-full h-64" />
+      <img
+        src={location?.thumbnail || locationImage}
+        alt={location?.address || "Location"}
+        className="w-full h-64 object-cover"
+      />
 
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h1 className="text-xl font-semibold">Half Way Tree</h1>
-          <p className="text-gray-500 text-sm">12 Hope Road Kingston 5</p>
+          <h1 className="text-xl font-semibold">{location?.address}</h1>
+          <p className="text-gray-500 text-sm">{location?.description}</p>
         </div>
         <Button>Generate Report</Button>
       </div>

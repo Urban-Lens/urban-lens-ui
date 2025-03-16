@@ -1,12 +1,37 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { Link, NavLink, Outlet, useParams } from "react-router-dom";
+import { useGetLocationById } from "../hooks/getLocationById";
 
 const ManageLocationLayout = () => {
+  const { id } = useParams<{ id: string }>();
+  const { data: location, isLoading, error } = useGetLocationById(id!);
+
   const navigationLinks = [
     { label: "Overview", path: "" },
     { label: "Location Stream", path: "location-stream" },
     { label: "Visitors", path: "visitors" },
     { label: "Campaigns", path: "campaigns" },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[600px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[600px] gap-4">
+        <AlertCircle className="h-8 w-8 text-destructive" />
+        <div className="text-center">
+          <h3 className="font-semibold text-lg">Error Loading Location</h3>
+          <p className="text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 relative h-full flex-1">
@@ -18,7 +43,7 @@ const ManageLocationLayout = () => {
           Back to Points of Interest
         </Link>
         <p className="font-light text-lg text-muted-foreground">
-          Manage Location
+          {location?.address || "Manage Location"}
         </p>
         <nav className="mt-4">
           <ul className="flex flex-col gap-2">
@@ -42,7 +67,7 @@ const ManageLocationLayout = () => {
         </nav>
       </div>
       <div className="flex-1 pl-64">
-        <Outlet />
+        <Outlet context={{ location, isLoading, error }} />
       </div>
     </div>
   );
