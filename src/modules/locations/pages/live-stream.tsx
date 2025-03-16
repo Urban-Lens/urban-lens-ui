@@ -7,6 +7,14 @@ import MetricsCard from "../components/metrics-card";
 import { ILocation } from "../types";
 import { Button } from "@/components/ui/button";
 import { HLSPlayer } from "../components/hls-player";
+import { useGetLocationMetrics } from "../hooks/getLocationMetrics";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -29,6 +37,20 @@ const getEmbedUrl = (url: string | undefined): string | undefined => {
 const LiveStreamPage = () => {
   const { location } = useOutletContext<LocationContext>();
   const [isStreamLoading, setIsStreamLoading] = useState(true);
+  // Internal state: "hour", "day", or "seconds"
+  const [aggregation, setAggregation] = useState<"hour" | "day" | "seconds">(
+    "hour"
+  );
+
+  // Convert internal state to API value: "seconds" becomes an empty string.
+  const apiAggregation = aggregation === "seconds" ? "" : aggregation;
+
+  // Fetch metrics using selected aggregation and location id.
+  const { data: metrics } = useGetLocationMetrics({
+    time_aggregation: apiAggregation,
+    location_id: location?.id,
+  });
+
   // streamType: "live" for YouTube embed, "object" for HLS stream.
   const [streamType, setStreamType] = useState<"live" | "object">("live");
 
@@ -44,17 +66,35 @@ const LiveStreamPage = () => {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div className="flex items-center gap-2 w-full justify-end">
+        <Select
+          value={aggregation}
+          onValueChange={(value) =>
+            setAggregation(value as "hour" | "day" | "seconds")
+          }
+        >
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select Aggregation" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="hour">Hour</SelectItem>
+            <SelectItem value="day">Day</SelectItem>
+            <SelectItem value="seconds">Seconds</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
         <MetricsCard
           title="Number of Vehicles"
-          value={5}
+          value={Math.round(metrics?.timeseries?.[0].vehicle_count ?? 0)}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
         <MetricsCard
           title="Number of Pedestrians"
-          value={320}
+          value={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}

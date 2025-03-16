@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { LOCATION_ROUTES } from "../routes/routes";
 
 interface LocationContext {
   location: ILocation | undefined;
@@ -22,23 +23,16 @@ interface LocationContext {
 const ManageLocationPage = () => {
   const { location } = useOutletContext<LocationContext>();
 
-  // Internal state: "hour", "day", or "seconds"
+  // Aggregation state: "hour", "day", or "seconds" (for UI)
   const [aggregation, setAggregation] = useState<"hour" | "day" | "seconds">(
     "hour"
   );
-
-  // Convert internal state to API value: "seconds" becomes an empty string.
+  // For API, convert "seconds" to empty string.
   const apiAggregation = aggregation === "seconds" ? "" : aggregation;
-
-  // Fetch metrics using selected aggregation and location id.
   const { data: metrics } = useGetLocationMetrics({
     time_aggregation: apiAggregation,
     location_id: location?.id,
   });
-
-  // Determine a friendly label for the current aggregation.
-  const aggregationLabel =
-    aggregation.charAt(0).toUpperCase() + aggregation.slice(1);
 
   return (
     <div className="flex flex-col gap-4 px-6 py-4">
@@ -92,6 +86,11 @@ const ManageLocationPage = () => {
           value="Positive, Room for Business Growth"
           icon={
             <Presentation className="h-5 w-5 text-primary" strokeWidth={1.5} />
+          }
+          detailsUrl={
+            LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.DETAIL(
+              location?.id!
+            ) ?? ""
           }
         />
         <MetricsCard
