@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -57,10 +58,10 @@ export const LoginForm = () => {
           <Button
             type="button"
             variant="ghost"
-            className="absolute right-2 top-1/2 -translate-y-1/2 h-auto py-0.5 px-2 text-gray-500 hover:text-gray-700"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-auto py-1.5 px-2 text-gray-500 hover:text-gray-700"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? "Hide" : "Show"}
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </Button>
         </div>
         {errors.password?.message && (

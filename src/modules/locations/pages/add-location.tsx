@@ -102,7 +102,7 @@ export const AddLocationPage: React.FC = () => {
           <>
             <div className="mb-4">
               <Label htmlFor="locationSearch" className="mb-2 block">
-                Select location
+                Select Location
               </Label>
               <Input
                 id="locationSearch"
@@ -148,10 +148,11 @@ export const AddLocationPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4">
               <Button disabled={!selectedLocation} onClick={handleContinue} className="w-full">
                 Continue
               </Button>
+              <p className="text-sm text-gray-500 text-center">OR</p>
               <Button variant="outline" onClick={() => setIsCreatingLocation(true)} className="w-full">
                 Add Your Own Location
               </Button>

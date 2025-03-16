@@ -54,7 +54,7 @@ export function PointsOfInterest() {
     <Card className="w-full">
       <CardHeader>
         <p className="font-light text-lg text-muted-foreground">
-          Points of Interest
+          Locations
         </p>
       </CardHeader>
       <CardContent>
