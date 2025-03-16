@@ -89,7 +89,7 @@ const ManageLocationPage = () => {
           }
           detailsUrl={
             LOCATION_ROUTES.MANAGE_LOCATION.VIEW_CAMPAIGN_REC.DETAIL(
-              location?.id!
+              location?.id ?? ""
             ) ?? ""
           }
         />
