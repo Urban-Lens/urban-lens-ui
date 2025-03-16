@@ -33,5 +33,6 @@ export const useGetLocationMetrics = (params: IGetLocationMetricsParams) => {
   return useQuery<ILocationMetricsResponse>({
     queryKey: locationQueryKeys.locationMetrics(params),
     queryFn: () => getLocationMetrics(params),
+    refetchInterval: params.time_aggregation === "" ? 2000 : undefined,
   });
 };

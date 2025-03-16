@@ -78,14 +78,14 @@ const ManageLocationPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <MetricsCard
           title="Number of Vehicles"
-          value={metrics?.timeseries?.[0].vehicle_count ?? 0}
+          value={Math.round(metrics?.timeseries?.[0].vehicle_count ?? 0)}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
         />
         <MetricsCard
           title="Number of Pedestrians"
-          value={metrics?.timeseries?.[0].people_count ?? 0}
+          value={Math.round(metrics?.timeseries?.[0].people_count ?? 0)}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}

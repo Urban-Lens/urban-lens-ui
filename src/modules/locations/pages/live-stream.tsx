@@ -44,7 +44,7 @@ const LiveStreamPage = () => {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <MetricsCard
           title="Number of Vehicles"
           value={5}
