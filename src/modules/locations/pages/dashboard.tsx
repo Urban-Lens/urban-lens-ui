@@ -14,11 +14,13 @@ const Dashboard = () => {
     time_aggregation: "hour",
   });
 
-  console.log(metrics);
-
   const [chartData, setChartData] = useState<DataPoint[]>(
     generateRandomData(20)
   );
+
+  const averageTraffic = metrics
+    ? (metrics?.averages.avg_people + metrics?.averages.avg_vehicles) / 2
+    : 0;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,7 +60,7 @@ const Dashboard = () => {
         />
         <MetricsCard
           title="Average Daily Traffic"
-          value={320}
+          value={averageTraffic}
           percentageChange={2.9}
           comparisonValue={130}
           icon={<Cctv className="h-5 w-5 text-primary scale-x-[-1]" />}
