@@ -6,3 +6,11 @@ export interface ILoginCredentials {
 export interface ILoginResponse {
   access_token: string;
 }
+
+export interface IUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  company_name: string;
+  industry: string;
+}

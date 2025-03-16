@@ -1,8 +1,10 @@
 import { useAuth } from "@/modules/auth/provider";
 import { LOCATION_ROUTES } from "@/modules/locations/routes/routes";
-import { Aperture, LogOut } from "lucide-react";
+import { Aperture,} from "lucide-react";
 import { Outlet } from "react-router-dom";
 import { Tab, Tabs } from "../components/Tabs";
+import { useGetAccountDetails } from "@/modules/auth/hooks/getAccountDetails";
+import { UserAvatar } from "../components/UserAvatar";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
@@ -13,7 +15,8 @@ const navItems = [
 ];
 
 export const DashboardLayout = () => {
-  const { logout } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const { data: user } = useGetAccountDetails(isAuthenticated);
   return (
     <>
       <header className="fixed top-0 left-0 right-0 bg-white z-10">
@@ -22,13 +25,7 @@ export const DashboardLayout = () => {
             <Aperture className="text-primary" />
             <h2 className="text-primary font-semibold text-lg">Urban Lens</h2>
           </div>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors"
-          >
-            <LogOut className="h-5 w-5" />
-            <span className="text-sm">Logout</span>
-          </button>
+          {user && <UserAvatar user={user} />}
         </div>
         <nav className="">
           <Tabs>
